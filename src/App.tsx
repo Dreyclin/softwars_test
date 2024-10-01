@@ -6,8 +6,10 @@ function App() {
   return (
     <div className="">
       <Header />
-      <Aside />
-      <Main />
+      <div className="aside-main-flex">
+        <Aside />
+        <Main />
+      </div>
     </div>
 
   );

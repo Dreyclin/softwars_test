@@ -17,11 +17,20 @@ body {
 }
 
 .container {
-    max-width: 95%;
-    margin: 0 auto;
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
 }
 
-.inactive {
+.inactive-btn {
     opacity: 0.5;
+}
+
+.active-item {
+    background-color: #DCFFD3;
+}
+
+.aside-main-flex {
+    display: flex;
+    gap: 1.25rem;
 }
 

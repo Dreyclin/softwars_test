@@ -19,7 +19,7 @@ const Header: React.FC = () => {
                             <span className="big-plus">+</span>
                             <span>Створити нову</span>
                         </button>
-                        <button className="btn delete-btn main-text inactive">
+                        <button className="btn delete-btn main-text inactive-btn">
                             <img src="../images/delete_logo.png" alt="" />
                             <span>Видалити</span>
                         </button>

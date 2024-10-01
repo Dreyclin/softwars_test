@@ -2,6 +2,8 @@ header {
     background-color: #F8FFF4;
     padding: 0.68rem 0;
     box-shadow: 0px 1px 7px 0px rgba(0,0,0,0.75);
+    z-index: 1000;
+    position: relative;
 }
 
 .logo-container {
@@ -26,7 +28,7 @@ header .container {
 }
 
 .btns-filter-container {
-    padding: 0 1.25rem;
+    padding-left: 1.25rem;
     width: 100%;
     display: flex;
     align-items: center;
@@ -59,7 +61,7 @@ header .container {
     background-color: #ff5d5d;
 }
 
-.delete-btn:hover:not(.inactive) {
+.delete-btn:hover:not(.inactive-btn) {
     background-color: #c24545;
 }
 
