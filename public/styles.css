@@ -1,3 +1,5 @@
+/* COMMON STYLES */
+
 body {
     font-family: 'Roboto', sans-serif;
 }
@@ -13,3 +15,9 @@ body {
     font-size: 0.8125rem;
     line-height: 0.95rem;
 }
+
+.container {
+    max-width: 95%;
+    margin: 0 auto;
+}
+

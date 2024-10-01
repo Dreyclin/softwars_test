@@ -16,9 +16,15 @@ function App() {
           <input type="text" placeholder='Пошук' />
         </div>
       </header>
-      
-      <aside>
 
+      <aside>
+        <div className="todo-item">
+          <h5 className="todo-item-title"></h5>
+          <p className="todo-item-description">
+            <span className="todo-item-date"></span>
+            <span className="todo-item-text"></span>
+          </p>
+        </div>
       </aside>
     </div>
   );
