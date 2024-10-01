@@ -10,7 +10,7 @@ header {
     display: flex;
     align-items: center;
     gap: 0.625rem;
-    width: 16.875rem;
+    width: 16rem;
 }
 
 .logo-text {
@@ -28,7 +28,6 @@ header .container {
 }
 
 .btns-filter-container {
-    padding-left: 1.25rem;
     width: 100%;
     display: flex;
     align-items: center;

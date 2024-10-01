@@ -1,0 +1,43 @@
+main {
+    text-align: center;
+    width: 100%;
+    padding: 0 1.75rem 0 0;
+}
+
+.date {
+    padding: 1.125rem 0 0.625rem 0;
+}
+
+
+.add-todo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.field {
+    width: 100%;
+    border: 1px solid #3B8F443D;
+    padding: 0.625rem 0.875rem;
+    border-radius: 5px;
+}
+
+.description-field::placeholder{
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.02rem;
+    color: #3B8F443D;
+}
+
+.description-field {
+    height: 18.75rem;
+    resize: none;
+    outline: none;
+}
+
+.title-field::placeholder {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.17rem;
+    color: #3B8F443D;
+}
