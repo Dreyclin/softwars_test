@@ -1,24 +1,17 @@
 import React from "react";
 import { ItemType } from "../../models/ItemType";
+import useToDo from "../../hooks/useToDo";
 
-const Item: React.FC<ItemType> = ({itemTitle, itemDescription, date}) => {
-    const today = new Date();
-    const isToday = date.toDateString() === today.toDateString();
-
-    const formatDate = (date: Date) => {
-        if(isToday) {
-            return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
-        } else {
-            return date.toLocaleDateString();
-        }
-    }
+const Item: React.FC<ItemType> = ({itemTitle, itemDescription, date, selected}) => {
+    
+    const {formatDate} = useToDo()
 
     return (
         <div className="todo-item">
-            <h5 className="todo-item-title main-text">{itemDescription}</h5>
+            <h5 className="todo-item-title main-text">{itemTitle === "" && "Нова нотатка"}</h5>
             <p className="todo-item-description secondary-text">
                 <span className="todo-item-date">{formatDate(date)}</span>
-                <span className="todo-item-text">{itemTitle}</span>
+                <span className="todo-item-text">{itemDescription === "" && "Ще немає тексту"}</span>
             </p>
         </div>
     )

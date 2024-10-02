@@ -1,5 +1,6 @@
-export interface ItemType {
+export interface ItemType { 
     itemTitle: string,
     itemDescription: string
-    date: Date
+    date: Date,
+    selected: boolean
 }

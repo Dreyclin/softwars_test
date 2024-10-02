@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import './Aside.css'
 import Item from "./Item";
-import { ItemType } from "../../models/ItemType";
-import { items } from "../items";
+import useToDo from "../../hooks/useToDo";
 const Aside: React.FC = () => {
 
-    const [newItems, setNewItems] = useState<ItemType[]>([])
+    const {newItems} = useToDo()
 
-    useEffect(() => {
-        setNewItems(items)
-    }, [newItems])
     return (
         <aside>
-            {newItems && newItems.map(item => (
-                <Item date={item.date} itemTitle={item.itemTitle} itemDescription={item.itemDescription}/>
+            {newItems && newItems.map((item, key) => (
+                <Item key={key} selected={item.selected} date={item.date} itemTitle={item.itemTitle} itemDescription={item.itemDescription}/>
             ))}
-            {/* <Item />
-            
-            <Item />
-            <Item /> */}
         </aside>
     )
 }

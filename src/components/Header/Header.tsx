@@ -1,7 +1,11 @@
 import React from "react";
 import './Header.css'
+import useToDo from "../../hooks/useToDo";
 
 const Header: React.FC = () => {
+
+    const {handleAddItem} = useToDo()
+
     return (
         <header>
             <div className="container">
@@ -15,7 +19,7 @@ const Header: React.FC = () => {
                 </div>
                 <div className="btns-filter-container">
                     <div className="control-btns-container">
-                        <button className="btn create-new-btn main-text">
+                        <button className="btn create-new-btn main-text" onClick={handleAddItem}>
                             <span className="big-plus">+</span>
                             <span>Створити нову</span>
                         </button>

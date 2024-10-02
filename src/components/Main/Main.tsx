@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./Main.css"
+import useToDo from "../../hooks/useToDo";
 
 const Main: React.FC = () => {
-    
-    const today = new Date();
-    const [todayFormated, setTodayFormated] = useState<string>();
 
-    useEffect(() => {
-        setTodayFormated(today.toLocaleDateString("uk-UA", {day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: '2-digit'}).replace(/\s*р\./, '').replace(/\s*о\s*(?=\d{2}:\d{2})/, ' '))
-    }, [])
+    const {todayFormated} = useToDo()
 
     return (
         <main>
