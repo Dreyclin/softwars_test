@@ -5,7 +5,7 @@ import useToDo from "../../hooks/useToDo";
 const Main: React.FC = () => {
 
     const {todayFormated} = useToDo()
-
+    
     return (
         <main>
             <p className="date">{todayFormated}</p>

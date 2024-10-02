@@ -34,17 +34,45 @@ const useToDo = () => {
     };
 
     const handleAddItem = () => {
-        const items = localStorage.getItem('items');
-        console.log(items)
-        const parsedItems = items ? JSON.parse(items) : [];
-    
+        const items = updateSelection();
         const newItem = { itemTitle: '', itemDescription: '', date: new Date(), selected: true };
-        const updatedItems = [newItem, ...parsedItems];
-    
-        localStorage.setItem('items', JSON.stringify(updatedItems));
+        
+        const finalItems = [newItem, ...items]
+        
+        localStorage.setItem('items', JSON.stringify(finalItems));
+
+        setNewItems(finalItems.map((item: ItemType) => ({
+            ...item,
+            date: new Date(item.date)
+        })))
     };
 
-    return {newItems, handleAddItem, formatDate, todayFormated}
+    const handleItemClick = (key: number) => {
+        const items = updateSelection();
+        items[key].selected = true;
+        setNewItems(items.map((item: ItemType) => ({
+            ...item,
+            date: new Date(item.date)
+        })))
+        localStorage.setItem('items', JSON.stringify(items))
+    }
+
+    const updateSelection = () => {
+        const items = localStorage.getItem('items');
+        const parsedItems = items ? JSON.parse(items) : [];
+        const selectedIndex = parsedItems.findIndex((item: ItemType) => item.selected === true)
+
+        const updatedItems = parsedItems.map((item: ItemType, index: number) => {
+            if (index === selectedIndex) {
+                return { ...item, selected: false };
+            }
+            return item;
+        });
+
+        return updatedItems
+    }
+
+    return {newItems, handleAddItem, formatDate, handleItemClick, todayFormated}
 }
 
 export default useToDo
