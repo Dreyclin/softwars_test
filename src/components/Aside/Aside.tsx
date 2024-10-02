@@ -10,13 +10,13 @@ const Aside: React.FC = () => {
     useEffect(() => {
         setNewItems(items)
     }, [newItems])
-
     return (
         <aside>
             {newItems && newItems.map(item => (
-                <Item itemTitle={item.itemTitle} itemDescription={item.itemDescription}/>
+                <Item date={item.date} itemTitle={item.itemTitle} itemDescription={item.itemDescription}/>
             ))}
             {/* <Item />
+            
             <Item />
             <Item /> */}
         </aside>
