@@ -8,6 +8,7 @@ interface ItemContextType {
     handleItemClick: (key: number) => void;
     handleItemChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
     handleDeleteItem: () => void;
+    filterItems: (searchStr: string) => void
     formatDate: (date: Date) => string,
     todayFormated: string | undefined
 }
@@ -16,6 +17,7 @@ const ItemContext = createContext<ItemContextType | undefined>(undefined);
 
 export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [newItems, setNewItems] = useState<ItemType[]>([])
+    const [searchQuery, setSearchQuery] = useState<string>();
     const today = new Date();
     const [todayFormated, setTodayFormated] = useState<string>();
     const [itemDetails, setItemDetails] = useState({
@@ -57,7 +59,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const handleAddItem = () => {
         const items = updateSelection();
-        const newItem = { itemTitle: '', itemDescription: '', date: new Date(), selected: true };
+        const newItem = { itemTitle: 'Нова нотатка', itemDescription: 'Ще немає тексту', date: new Date(), selected: true };
 
         const finalItems = [newItem, ...items]
 
@@ -70,8 +72,8 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             ...item,
             date: new Date(item.date)
         })))
-
         localStorage.setItem('items', JSON.stringify(finalItems));
+        filterItems(searchQuery);
     };
 
     const handleItemClick = (key: number) => {
@@ -90,11 +92,11 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             date: new Date(item.date)
         })))
         localStorage.setItem('items', JSON.stringify(items))
+        filterItems(searchQuery);
     }
 
     const handleDeleteItem = () => {
-        const items = localStorage.getItem('items');
-        const parsedItems = items && JSON.parse(items);
+        const parsedItems = getParsedItems();
         const filteredItems = parsedItems.filter((item: ItemType) => item.selected !== true)
         if (filteredItems) {
             setNewItems(filteredItems.map((item: ItemType) => ({
@@ -103,6 +105,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             })))
         }
         localStorage.setItem('items', JSON.stringify(filteredItems))
+        filterItems(searchQuery);
     }
 
     const handleItemChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -111,8 +114,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             ...prevDetails,
             [name]: value
         }))
-        const items = localStorage.getItem('items');
-        const parsedItems = items ? JSON.parse(items) : [];
+        const parsedItems = getParsedItems();
         const selectedIndex = parsedItems.findIndex((item: ItemType) => item.selected === true);
         parsedItems[selectedIndex] = {
             ...parsedItems[selectedIndex],
@@ -123,11 +125,41 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             date: new Date(item.date)
         })));
         localStorage.setItem('items', JSON.stringify(parsedItems));
+        filterItems(searchQuery);
+    }
+
+    const filterItems = (searchStr: string | undefined) => {
+        const search = searchStr || "";
+        setSearchQuery(search);
+
+        const parsedItems = getParsedItems();
+
+        if (search !== undefined && search !== '') {
+            const filteredItems = parsedItems.filter((item: ItemType) =>
+                item.itemTitle.toLowerCase().includes(search.toLowerCase())
+            );
+
+            setNewItems(filteredItems.map((item: ItemType) => ({
+                ...item,
+                date: new Date(item.date),
+            })));
+        } else {
+            setNewItems(parsedItems.map((item: ItemType) => ({
+                ...item,
+                date: new Date(item.date)
+            })));
+        }
+    }
+
+    const getParsedItems = () => {
+        const items = localStorage.getItem('items');
+        const parsedItems = items ? JSON.parse(items) : [];
+
+        return parsedItems
     }
 
     const updateSelection = () => {
-        const items = localStorage.getItem('items');
-        const parsedItems = items ? JSON.parse(items) : [];
+        const parsedItems = getParsedItems();
         const selectedIndex = parsedItems.findIndex((item: ItemType) => item.selected === true)
 
         const updatedItems = parsedItems.map((item: ItemType, index: number) => {
@@ -141,7 +173,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     return (
-        <ItemContext.Provider value={{ items: newItems, handleAddItem, handleItemClick, formatDate, handleItemChange, todayFormated, handleDeleteItem, itemDetails }}>
+        <ItemContext.Provider value={{ items: newItems, handleAddItem, handleItemClick, formatDate, handleItemChange, filterItems, todayFormated, handleDeleteItem, itemDetails }}>
             {children}
         </ItemContext.Provider>
     );

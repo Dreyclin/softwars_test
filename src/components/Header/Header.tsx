@@ -4,7 +4,7 @@ import { useItems } from "../../hooks/useItems";
 
 const Header: React.FC = () => {
     
-    const {handleAddItem, items, handleDeleteItem} = useItems()
+    const {handleAddItem, items, handleDeleteItem, filterItems} = useItems()
 
     return (
         <header>
@@ -29,7 +29,7 @@ const Header: React.FC = () => {
                         </button>
                     </div>
                     <div className="filter-input-container">
-                        <input type="text" placeholder='Пошук' />
+                        <input type="text" placeholder='Пошук' onChange={(e) => filterItems(e.target.value)}/>
                     </div>
                 </div>
             </div>
