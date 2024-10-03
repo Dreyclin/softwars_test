@@ -106,7 +106,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 filteredItems[0].selected = true;
                 setItemDetails({
                     title: filteredItems[0].itemTitle,
-                    description: filteredItems[0].description
+                    description: filteredItems[0].itemDescription
                 })
                 setItemDate(new Date(filteredItems[0].date))
             }

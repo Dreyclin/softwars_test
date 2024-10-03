@@ -5,7 +5,7 @@ import { useItems } from "../../hooks/useItems";
 const Main: React.FC = () => {
 
     const { items, dateFormated, itemDetails, handleItemChange } = useItems()
-
+    console.log(itemDetails)
     return (
         <main>
 
