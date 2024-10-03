@@ -36,6 +36,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const selectedItem = parsedItems.find((item: ItemType) => item.selected);
             if (selectedItem) {
                 const { itemTitle, itemDescription } = selectedItem;
+                setItemDate(new Date(selectedItem.date))
                 setItemDetails({ title: itemTitle, description: itemDescription });
             }
         }
