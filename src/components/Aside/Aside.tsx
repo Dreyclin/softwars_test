@@ -5,7 +5,6 @@ import { useItems } from "../../hooks/useItems";
 const Aside: React.FC = () => {
 
     const {items, handleItemClick} = useItems()
-    console.log(items);
     return (
         <aside>
             {items && items.map((item, key) => (

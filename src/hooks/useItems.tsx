@@ -3,12 +3,10 @@ import { ItemType } from '../models/ItemType';
 
 interface ItemContextType {
     items: ItemType[];
-    title: string | undefined,
-    description: string | undefined
-    handleTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-    handleDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+    itemDetails: { title: string, description: string },
     handleAddItem: () => void;
     handleItemClick: (key: number) => void;
+    handleItemChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
     handleDeleteItem: () => void;
     formatDate: (date: Date) => string,
     todayFormated: string | undefined
@@ -20,8 +18,10 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [newItems, setNewItems] = useState<ItemType[]>([])
     const today = new Date();
     const [todayFormated, setTodayFormated] = useState<string>();
-    const [title, setTitle] = useState<string>();
-    const [description, setDescription] = useState<string>();
+    const [itemDetails, setItemDetails] = useState({
+        title: '',
+        description: ''
+    })
 
     useEffect(() => {
         const storedItems = localStorage.getItem('items');
@@ -31,6 +31,12 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 date: new Date(item.date),
             }));
             setNewItems(parsedItems);
+
+            const selectedItem = parsedItems.find((item: ItemType) => item.selected);
+            if (selectedItem) {
+                const { itemTitle, itemDescription } = selectedItem;
+                setItemDetails({ title: itemTitle, description: itemDescription });
+            }
         }
     }, [])
 
@@ -55,6 +61,11 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         const finalItems = [newItem, ...items]
 
+        setItemDetails({
+            title: '',
+            description: ''
+        })
+
         setNewItems(finalItems.map((item: ItemType) => ({
             ...item,
             date: new Date(item.date)
@@ -66,8 +77,14 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const handleItemClick = (key: number) => {
         const items = updateSelection();
         items[key].selected = true;
-        setTitle(items[key].itemTitle);
-        setDescription(items[key].itemDescription);
+        const selectedItem = items[key];
+        if (selectedItem) {
+            const { itemTitle, itemDescription } = selectedItem
+            setItemDetails({
+                title: itemTitle,
+                description: itemDescription
+            })
+        }
         setNewItems(items.map((item: ItemType) => ({
             ...item,
             date: new Date(item.date)
@@ -79,38 +96,28 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const items = localStorage.getItem('items');
         const parsedItems = items && JSON.parse(items);
         const filteredItems = parsedItems.filter((item: ItemType) => item.selected !== true)
-        setNewItems(filteredItems.map((item: ItemType) => ({
-            ...item,
-            date: new Date(item.date)
-        })))
+        if (filteredItems) {
+            setNewItems(filteredItems.map((item: ItemType) => ({
+                ...item,
+                date: new Date(item.date)
+            })))
+        }
         localStorage.setItem('items', JSON.stringify(filteredItems))
     }
 
-    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newTitle = e.target.value;
-        setTitle(newTitle);
-
+    const handleItemChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target
+        setItemDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value
+        }))
         const items = localStorage.getItem('items');
         const parsedItems = items ? JSON.parse(items) : [];
         const selectedIndex = parsedItems.findIndex((item: ItemType) => item.selected === true);
-
-        parsedItems[selectedIndex].itemTitle = newTitle;
-        setNewItems(parsedItems.map((item: ItemType) => ({
-            ...item,
-            date: new Date(item.date)
-        })));
-        localStorage.setItem('items', JSON.stringify(parsedItems));
-    }
-
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newDesc = e.target.value;
-        setDescription(newDesc);
-
-        const items = localStorage.getItem('items');
-        const parsedItems = items ? JSON.parse(items) : [];
-        const selectedIndex = parsedItems.findIndex((item: ItemType) => item.selected === true);
-
-        parsedItems[selectedIndex].itemDescription = newDesc;
+        parsedItems[selectedIndex] = {
+            ...parsedItems[selectedIndex],
+            [name === 'title' ? 'itemTitle' : 'itemDescription']: value,
+        };
         setNewItems(parsedItems.map((item: ItemType) => ({
             ...item,
             date: new Date(item.date)
@@ -134,7 +141,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     return (
-        <ItemContext.Provider value={{ items: newItems, handleAddItem, handleItemClick, formatDate, todayFormated, handleDeleteItem, handleDescriptionChange, handleTitleChange, title, description }}>
+        <ItemContext.Provider value={{ items: newItems, handleAddItem, handleItemClick, formatDate, handleItemChange, todayFormated, handleDeleteItem, itemDetails }}>
             {children}
         </ItemContext.Provider>
     );
