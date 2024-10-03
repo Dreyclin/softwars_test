@@ -10,7 +10,7 @@ interface ItemContextType {
     handleDeleteItem: () => void;
     filterItems: (searchStr: string) => void
     formatDate: (date: Date) => string,
-    todayFormated: string | undefined
+    dateFormated: string | undefined
 }
 
 const ItemContext = createContext<ItemContextType | undefined>(undefined);
@@ -18,8 +18,7 @@ const ItemContext = createContext<ItemContextType | undefined>(undefined);
 export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [newItems, setNewItems] = useState<ItemType[]>([])
     const [searchQuery, setSearchQuery] = useState<string>();
-    const today = new Date();
-    const [todayFormated, setTodayFormated] = useState<string>();
+    const [dateFormated, setDateFormated] = useState<string>();
     const [itemDetails, setItemDetails] = useState({
         title: '',
         description: ''
@@ -42,9 +41,9 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
     }, [])
 
-    useEffect(() => {
-        setTodayFormated(today.toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: '2-digit' }).replace(/\s*р\./, '').replace(/\s*о\s*(?=\d{2}:\d{2})/, ' '))
-    }, [])
+    const setItemDate = (date: Date) => {
+        setDateFormated(date.toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: '2-digit' }).replace(/\s*р\./, '').replace(/\s*о\s*(?=\d{2}:\d{2})/, ' '))
+    }
 
     const formatDate = (date: Date) => {
         const today = new Date();
@@ -60,7 +59,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const handleAddItem = () => {
         const items = updateSelection();
         const newItem = { itemTitle: 'Нова нотатка', itemDescription: 'Ще немає тексту', date: new Date(), selected: true };
-
+        setItemDate(newItem.date)
         const finalItems = [newItem, ...items]
 
         setItemDetails({
@@ -80,6 +79,9 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const items = updateSelection();
         items[key].selected = true;
         const selectedItem = items[key];
+
+        setItemDate(new Date(items[key].date));
+
         if (selectedItem) {
             const { itemTitle, itemDescription } = selectedItem
             setItemDetails({
@@ -97,8 +99,17 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const handleDeleteItem = () => {
         const parsedItems = getParsedItems();
-        const filteredItems = parsedItems.filter((item: ItemType) => item.selected !== true)
+
+        const filteredItems = parsedItems.filter((item: ItemType) => !item.selected)
         if (filteredItems) {
+            if(filteredItems[0]){
+                filteredItems[0].selected = true;
+                setItemDetails({
+                    title: filteredItems[0].itemTitle,
+                    description: filteredItems[0].description
+                })
+                setItemDate(new Date(filteredItems[0].date))
+            }
             setNewItems(filteredItems.map((item: ItemType) => ({
                 ...item,
                 date: new Date(item.date)
@@ -173,7 +184,7 @@ export const ItemProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     return (
-        <ItemContext.Provider value={{ items: newItems, handleAddItem, handleItemClick, formatDate, handleItemChange, filterItems, todayFormated, handleDeleteItem, itemDetails }}>
+        <ItemContext.Provider value={{ items: newItems, handleAddItem, handleItemClick, formatDate, handleItemChange, filterItems, dateFormated, handleDeleteItem, itemDetails }}>
             {children}
         </ItemContext.Provider>
     );
