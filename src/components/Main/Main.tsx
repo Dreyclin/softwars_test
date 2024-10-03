@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./Main.css"
-import useToDo from "../../hooks/useToDo";
+import { useItems } from "../../hooks/useItems";
 
 const Main: React.FC = () => {
 
-    const {todayFormated} = useToDo()
-    
+    const {todayFormated, title, description, handleTitleChange, handleDescriptionChange} = useItems()
+
     return (
         <main>
             <p className="date">{todayFormated}</p>
             <div className="add-todo-container">
-                <input type="text" placeholder="Заголовок" className="title-field field"/>
-                <textarea name="" id="" placeholder='Текст' className="description-field field"></textarea>
+                <input type="text" placeholder="Заголовок" className="title-field field" value={title} onChange={handleTitleChange}/>
+                <textarea name="" id="" placeholder='Текст' className="description-field field" value={description} onChange={handleDescriptionChange}></textarea>
             </div>
         </main>
     )

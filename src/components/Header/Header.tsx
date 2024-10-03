@@ -1,10 +1,10 @@
 import React from "react";
 import './Header.css'
-import useToDo from "../../hooks/useToDo";
+import { useItems } from "../../hooks/useItems";
 
 const Header: React.FC = () => {
-
-    const {handleAddItem} = useToDo()
+    
+    const {handleAddItem, items, handleDeleteItem} = useItems()
 
     return (
         <header>
@@ -23,7 +23,7 @@ const Header: React.FC = () => {
                             <span className="big-plus">+</span>
                             <span>Створити нову</span>
                         </button>
-                        <button className="btn delete-btn main-text inactive-btn">
+                        <button className={`btn delete-btn main-text ${items.length === 0 && "inactive-btn"}`} onClick={handleDeleteItem}>
                             <img src="../images/delete_logo.png" alt="" />
                             <span>Видалити</span>
                         </button>

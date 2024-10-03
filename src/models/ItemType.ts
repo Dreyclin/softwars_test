@@ -1,5 +1,5 @@
 export interface ItemType {
-    handleItemClick: () => void, 
+    handleItemClick: () => void,
     itemTitle: string,
     itemDescription: string
     date: Date,
